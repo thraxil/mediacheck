@@ -1,0 +1,2 @@
+mediacheck: *.go
+	go build .
