@@ -2,10 +2,10 @@ package main // import "github.com/thraxil/mediacheck"
 
 import (
 	"errors"
+	"flag"
 	"io/ioutil"
 	"net/http"
 	"net/url"
-	"os"
 	"strings"
 	"sync"
 	"time"
@@ -15,7 +15,6 @@ import (
 	"golang.org/x/net/html"
 )
 
-var TIMEOUT = 1000 * time.Millisecond
 var wg sync.WaitGroup
 
 type failure struct {
@@ -24,14 +23,17 @@ type failure struct {
 }
 
 func main() {
-	if len(os.Args) < 2 {
+	var URL = flag.String("url", "", "URL to check")
+	var timeout = flag.Int("timeout", 3000, "timeout (ms)")
+	flag.Parse()
+
+	if *URL == "" {
 		log.Fatal("must specify a URL")
 	}
-	fetchUrl := os.Args[1]
-	u, err := url.Parse(fetchUrl)
+	u, err := url.Parse(*URL)
 	if err != nil {
 		log.WithFields(log.Fields{
-			"URL": fetchUrl,
+			"URL": *URL,
 		}).Fatal(err)
 	}
 	if !u.IsAbs() {
@@ -44,7 +46,7 @@ func main() {
 			"Host":   u.Host,
 			"Path":   u.Path,
 		}).Info("fetching")
-	ctx, cancel := context.WithTimeout(context.Background(), TIMEOUT)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Millisecond*time.Duration(*timeout))
 	defer cancel()
 	status, result, err := fetchURL(ctx, u)
 	if err != nil {
