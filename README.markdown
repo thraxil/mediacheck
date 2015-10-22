@@ -36,7 +36,7 @@ results as JSON for easier parsing. (uses
 A successful check:
 
 ```
-$ ./mediacheck -url=https://www.google.com/            2 ?
+$ ./mediacheck -url=https://www.google.com/
 INFO[0000] fetching                                      Host=www.google.com Path=/ Scheme=https URL=https://www.google.com/
 INFO[0000] retrieved page                               
 INFO[0000] extracted media URLs                          number=3
