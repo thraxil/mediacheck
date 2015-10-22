@@ -25,7 +25,23 @@ type failure struct {
 func main() {
 	var URL = flag.String("url", "", "URL to check")
 	var timeout = flag.Int("timeout", 3000, "timeout (ms)")
+	var loglevel = flag.String("log-level", "info", "log level: info/warn/error")
+	var logformat = flag.String("log-format", "text", "log format: text or json")
 	flag.Parse()
+
+	if *loglevel == "info" {
+		log.SetLevel(log.InfoLevel)
+	}
+	if *loglevel == "warn" {
+		log.SetLevel(log.WarnLevel)
+	}
+	if *loglevel == "error" {
+		log.SetLevel(log.ErrorLevel)
+	}
+
+	if *logformat == "json" {
+		log.SetFormatter(&log.JSONFormatter{})
+	}
 
 	if *URL == "" {
 		log.Fatal("must specify a URL")
