@@ -188,24 +188,24 @@ func getMediaURL(n *html.Node) (bool, *url.URL) {
 	}
 	switch {
 	case n.Data == "img":
-		return getImgSrc(n)
+		return getElementSrc(n)
 	case n.Data == "link":
-		return getLinkHref(n)
+		return getElementHref(n)
 	case n.Data == "script":
-		return getScriptSrc(n)
+		return getElementSrc(n)
 	case n.Data == "video":
-		return getVideoSrc(n)
+		return getElementSrc(n)
 	case n.Data == "source":
-		return getVideoSrc(n)
+		return getElementSrc(n)
 	case n.Data == "track":
-		return getVideoSrc(n)
+		return getElementSrc(n)
 	case n.Data == "iframe":
-		return getIframeSrc(n)				
+		return getElementSrc(n)				
 	}
 	return false, nil
 }
 
-func getImgSrc(n *html.Node) (bool, *url.URL) {
+func getElementSrc(n *html.Node) (bool, *url.URL) {
 	for _, a := range n.Attr {
 		if a.Key == "src" {
 			url, err := url.Parse(a.Val)
@@ -217,45 +217,9 @@ func getImgSrc(n *html.Node) (bool, *url.URL) {
 	return false, nil
 }
 
-func getScriptSrc(n *html.Node) (bool, *url.URL) {
-	for _, a := range n.Attr {
-		if a.Key == "src" {
-			url, err := url.Parse(a.Val)
-			if err == nil {
-				return true, url
-			}
-		}
-	}
-	return false, nil
-}
-
-func getLinkHref(n *html.Node) (bool, *url.URL) {
+func getElementHref(n *html.Node) (bool, *url.URL) {
 	for _, a := range n.Attr {
 		if a.Key == "href" {
-			url, err := url.Parse(a.Val)
-			if err == nil {
-				return true, url
-			}
-		}
-	}
-	return false, nil
-}
-
-func getVideoSrc(n *html.Node) (bool, *url.URL) {
-	for _, a := range n.Attr {
-		if a.Key == "src" {
-			url, err := url.Parse(a.Val)
-			if err == nil {
-				return true, url
-			}
-		}
-	}
-	return false, nil
-}
-
-func getIframeSrc(n *html.Node) (bool, *url.URL) {
-	for _, a := range n.Attr {
-		if a.Key == "src" {
 			url, err := url.Parse(a.Val)
 			if err == nil {
 				return true, url
