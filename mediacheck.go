@@ -195,6 +195,12 @@ func getMediaURL(n *html.Node) (bool, *url.URL) {
 		return getScriptSrc(n)
 	case n.Data == "video":
 		return getVideoSrc(n)
+	case n.Data == "source":
+		return getVideoSrc(n)
+	case n.Data == "track":
+		return getVideoSrc(n)
+	case n.Data == "iframe":
+		return getIframeSrc(n)				
 	}
 	return false, nil
 }
@@ -236,6 +242,18 @@ func getLinkHref(n *html.Node) (bool, *url.URL) {
 }
 
 func getVideoSrc(n *html.Node) (bool, *url.URL) {
+	for _, a := range n.Attr {
+		if a.Key == "src" {
+			url, err := url.Parse(a.Val)
+			if err == nil {
+				return true, url
+			}
+		}
+	}
+	return false, nil
+}
+
+func getIframeSrc(n *html.Node) (bool, *url.URL) {
 	for _, a := range n.Attr {
 		if a.Key == "src" {
 			url, err := url.Parse(a.Val)
