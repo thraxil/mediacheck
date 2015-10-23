@@ -261,7 +261,7 @@ func checkMedia(ctx context.Context, u *url.URL) error {
 			return err
 		}
 		if resp.Status != "200 OK" {
-			return errors.New("bad status")
+			return errors.New("bad status: " + resp.Status)
 		}
 		return nil
 	}
