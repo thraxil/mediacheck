@@ -25,7 +25,7 @@ type failure struct {
 func main() {
 	var URL = flag.String("url", "", "URL to check")
 	var timeout = flag.Int("timeout", 3000, "timeout (ms)")
-	var loglevel = flag.String("log-level", "info", "log level: info/warn/error")
+	var loglevel = flag.String("log-level", "error", "log level: info/warn/error")
 	var logformat = flag.String("log-format", "text", "log format: text or json")
 	flag.Parse()
 
@@ -84,6 +84,8 @@ func main() {
 	fail := make(chan failure, 0)
 
 	go func() {
+		// this is a leaked goroutine, but it's a one-shot commandline
+		// app, so we just tolerate it
 		for f := range fail {
 			failures = append(failures, f)
 		}
