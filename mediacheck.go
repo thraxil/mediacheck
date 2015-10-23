@@ -206,20 +206,16 @@ func getMediaURL(n *html.Node) (bool, *url.URL) {
 }
 
 func getElementSrc(n *html.Node) (bool, *url.URL) {
-	for _, a := range n.Attr {
-		if a.Key == "src" {
-			url, err := url.Parse(a.Val)
-			if err == nil {
-				return true, url
-			}
-		}
-	}
-	return false, nil
+	return getElementAttr(n, "src")
 }
 
 func getElementHref(n *html.Node) (bool, *url.URL) {
+	return getElementAttr(n, "href")
+}
+
+func getElementAttr(n *html.Node, key string) (bool, *url.URL) {
 	for _, a := range n.Attr {
-		if a.Key == "href" {
+		if a.Key == key {
 			url, err := url.Parse(a.Val)
 			if err == nil {
 				return true, url
