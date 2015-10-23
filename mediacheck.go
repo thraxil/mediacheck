@@ -238,7 +238,6 @@ func checkMedia(ctx context.Context, u *url.URL) error {
 	}, 1)
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
-		log.WithFields(log.Fields{"url": u.String()}).Error(err)
 		return err
 	}
 	go func() {
@@ -254,17 +253,14 @@ func checkMedia(ctx context.Context, u *url.URL) error {
 	case <-ctx.Done():
 		tr.CancelRequest(req)
 		<-c // wait for client.Do
-		log.WithFields(log.Fields{"url": u.String()}).Error(ctx.Err())
 		return ctx.Err()
 	case ok := <-c:
 		err := ok.err
 		resp := ok.r
 		if err != nil {
-			log.WithFields(log.Fields{"url": u.String()}).Error(err)
 			return err
 		}
 		if resp.Status != "200 OK" {
-			log.WithFields(log.Fields{"url": u.String(), "status": resp.Status}).Error("not a 200")
 			return errors.New("bad status")
 		}
 		return nil
