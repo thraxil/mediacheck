@@ -11,16 +11,18 @@ HTTP/HTTPS mixed content issues.
 
 
 ```
-$ ./mediacheck --help
-Usage of ./mediacheck:
+$ ./mediacheck -help
+Usage of ./mediacheck:                                                                  
   -log-format string
-        log format: text or json (default "text")
+    	log format: text or json (default "text")
   -log-level string
-        log level: info/warn/error (default "info")
+    	log level: info/warn/error (default "error")
   -timeout int
-        timeout (ms) (default 3000)
+    	timeout (ms) (default 3000)
   -url string
-        URL to check
+    	URL to check
+  -verify-ssl
+    	verify SSL certificates (default true)
 ```
 
 The only required flag is `-url`. `-timeout` is handy if you want to
