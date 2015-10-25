@@ -1,6 +1,7 @@
 package main // import "github.com/thraxil/mediacheck"
 
 import (
+	"crypto/tls"
 	"errors"
 	"flag"
 	"io/ioutil"
@@ -16,6 +17,7 @@ import (
 )
 
 var wg sync.WaitGroup
+var verifySSL bool
 
 type failure struct {
 	URL *url.URL
@@ -27,6 +29,7 @@ func main() {
 	var timeout = flag.Int("timeout", 3000, "timeout (ms)")
 	var loglevel = flag.String("log-level", "error", "log level: info/warn/error")
 	var logformat = flag.String("log-format", "text", "log format: text or json")
+	flag.BoolVar(&verifySSL, "verify-ssl", true, "verify SSL certificates")
 	flag.Parse()
 
 	if *loglevel == "info" {
@@ -120,6 +123,11 @@ func main() {
 
 func fetchURL(ctx context.Context, u *url.URL) (string, []byte, error) {
 	tr := &http.Transport{}
+	if !verifySSL {
+		tr = &http.Transport{
+			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+		}
+	}
 	client := http.Client{Transport: tr}
 	c := make(chan struct {
 		r   *http.Response
@@ -200,7 +208,7 @@ func getMediaURL(n *html.Node) (bool, *url.URL) {
 	case n.Data == "track":
 		return getElementSrc(n)
 	case n.Data == "iframe":
-		return getElementSrc(n)				
+		return getElementSrc(n)
 	}
 	return false, nil
 }
@@ -231,6 +239,11 @@ func checkMedia(ctx context.Context, u *url.URL) error {
 		"url": u.String(),
 	}).Info("checking media URL")
 	tr := &http.Transport{}
+	if !verifySSL {
+		tr = &http.Transport{
+			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+		}
+	}
 	client := http.Client{Transport: tr}
 	c := make(chan struct {
 		r   *http.Response
