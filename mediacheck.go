@@ -218,6 +218,11 @@ func getElementSrc(n *html.Node) (bool, *url.URL) {
 }
 
 func getElementHref(n *html.Node) (bool, *url.URL) {
+	found, rel := getElementAttr(n, "rel")
+	if found && rel.String() == "canonical" {
+		// <link rel="canonical" ..> elements should be ignored
+		return false, nil
+	}
 	return getElementAttr(n, "href")
 }
 
