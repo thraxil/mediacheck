@@ -58,3 +58,12 @@ FATA[0001] NOT OK
 ```
 
 A linked CSS file is returning a 403.
+
+## Docker
+
+mediacheck is also available via docker. If you are running docker,
+you don't have to install anything, you can just run it directly like:
+
+```
+$ docker run thraxil/mediacheck -url=https://www.google.com/ -log-level=info
+```
